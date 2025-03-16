@@ -6,10 +6,8 @@ ENV NODE_ENV=production
 WORKDIR /app
 # Copy source code
 COPY . .
-# Copy package.json and package-lock.json
-COPY package*.json ./
 
-RUN npm ci
+RUN npm i
 
 RUN npm run build
 
