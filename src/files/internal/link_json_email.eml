@@ -1,0 +1,103 @@
+Delivered-To: racsoraul@gmail.com
+Received: by 2002:a05:6359:2707:b0:1dc:b6dd:cf88 with SMTP id lw7csp1507519rwb;
+        Sat, 15 Mar 2025 18:56:47 -0700 (PDT)
+X-Received: by 2002:a05:6102:3710:b0:4bb:d64d:8331 with SMTP id ada2fe7eead31-4c3831602ddmr6231871137.11.1742090207341;
+        Sat, 15 Mar 2025 18:56:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1742090207; cv=none;
+        d=google.com; s=arc-20240605;
+        b=eeteu5Jj2PYtpHLt+KOJ6FdNwJnjqGCa1NCLEw2qOsnLWPWrHdqdJB5uV4lfGXYzIi
+         xAQ1KMrWBLxG9UauXjFtS/lKIb51V619FMX8TopBVg1ZfkpsMHizZIdrTqx2S1YuPzS6
+         7Gw/SELDG9GKGjuSu0AVtw3O+4agQkiumshvQbm41RkEBCgA9WufrMxtr0W9ELWLkfgK
+         /jDK04xLpM7kDWL32UUBDwCRcNrR25Gjcn9rku+gHZ7TKQa73D15y6YfIsmMPgCr2X1b
+         oWeVu8cx7vaNs7moFZR2ETevHMrNO86ZRPAEURYfgtPjwS6If6Zftax7YODk9EW8jbU6
+         wS8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=vEF5gnvybC/TITPWgNjPHCZcvfB0feXi1QwNpIlff4A=;
+        fh=XWn/r55b1sKQZ3DTn6B9OuY81LrrLxFJ9YD/wpChHFM=;
+        b=VRXiZWfqRNucsljsaMjWDbpqrWCG5Ys9SRhTmW1m7aR8BzgxavmsYYHCEE3wm1GaK9
+         iprmOV1s4XrAwxGDgyjsD8lDGghxmOTKlBa6yMYV3XSrfN4J91ACfS4nrm0fTgN6cWGQ
+         9k1REDoSxE18CWhtDbPJ71N5INmOPJrutUAdokE8gaEYE/fOoEMxdBPpyaF4EqBJaj0C
+         8mo9B+lcvGVzmMAqwtGHHdx/kgbuCOHq55NUE7yhGVrqPecQ/2JP4jyjnO056u8AWJD7
+         8wPFlVepCSLF6vUnw3r2+xS9WDUsjyTVQJcMkQVsJ8ACUUE1I6oIEH6kU2MwLBNXoEBH
+         TW0g==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=WnE3ionP;
+       spf=pass (google.com: domain of stefhanie.rizo@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=stefhanie.rizo@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+Return-Path: <stefhanie.rizo@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id a1e0cc1a2514c-86d90d644fcsor2024916241.1.2025.03.15.18.56.47
+        for <racsoraul@gmail.com>
+        (Google Transport Security);
+        Sat, 15 Mar 2025 18:56:47 -0700 (PDT)
+Received-SPF: pass (google.com: domain of stefhanie.rizo@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=WnE3ionP;
+       spf=pass (google.com: domain of stefhanie.rizo@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=stefhanie.rizo@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742090207; x=1742695007; dara=google.com;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vEF5gnvybC/TITPWgNjPHCZcvfB0feXi1QwNpIlff4A=;
+        b=WnE3ionPY5tvs0PZZD93cox5d0SHNHHsHxjXlahXYyiJUGmyzaXhu1qgIH1MxR+wGb
+         IHrz7oXm/JgdwZ+fDssFISAqydReJrqRCrCt6Cnht8uVC9T1Z3oQ5iiOVNOaG55+tilc
+         qTDKzTrZoleebKI9V3qkby56pmQSBXe/QXZyJQ8l/gEe0dw7t/RcyWrt0vE8AezBc5L9
+         hQ0p5PguxEggd84pQwYfUUzIihr5eO/Ird49THJVI401I4ZPbuHpfXzYSWYQ4AeELzuC
+         F/sp52ShsUO4kQKQJfpSYX36XoVEc9A7hFJnDiW0RflVuQ8ySWwT8pfnd9TiwqCubku0
+         FDFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742090207; x=1742695007;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vEF5gnvybC/TITPWgNjPHCZcvfB0feXi1QwNpIlff4A=;
+        b=uG4HZjypUy9dy6RWO/7shL4xUw/0R0vGUKzQF0mr2Z1UUh2w6F6kz+413HYOOiiNNm
+         AKJ+DEIkOhlSWvo5KefM9zYo5IpXxszcK27M/Rzp2FUyiZosP/y5JXBxu7eBtM0dV/WE
+         +2asJLk8wtCNFEH9Kb5unR5OopRyc1pMmvKcF05l/Y7X/h0ejy4kgoUHd68OlxfsnO0J
+         c16EhbklCAceLi8vjPMwQs5wakA4Mdak6sWfV0yclcEPriLCMdCkA70/iLVaKKjhZJGa
+         Y9N6jSJv8Ok1lFilRq6G3S9gyA/wkfCTAZfmMKVo8gEXvms9+i7GgHEQfT5a/kx5LRat
+         tuRw==
+X-Gm-Message-State: AOJu0YzeMC113D0gfVbPrvbvSPsdJudBn6JvmhLbE25Lms89aml2HgWM
+	JL5qz83DGbs7HYP15ti9RwPQ/OyDD9pSqeFwtuv+c4GwJ0l6vCRW5Wm735PtPO0me3jotBx6Xfv
+	YSytup29PxAOOXoUSKvIIIjL1o9DATQ==
+X-Gm-Gg: ASbGncsmIlpPB+OVgb/+mfz/dQcGwnYWOwITg8d+U+MZ3AcWIhztUzrQOPJldBAiivC
+	Cb4t7pioKLOmkcEHDQty0Q92vEdAs88cGIr+WY2/X/GIVEn0guNUDKVrUUmNzeF1jDCd3rR/KHT
+	mxw7ZSHtqjgLH7D/pWbFP/+ec/Yvk=
+X-Google-Smtp-Source: AGHT+IGkR1nmUvFLxLWi/KV8MYq6n/MAJxdF1Zb/pbwq/9fROuEvJedcBMIk/ugyqxYKUIUgQeTtmnARuXYRSF+V4EE=
+X-Received: by 2002:a05:6102:800e:b0:4c1:9780:383e with SMTP id
+ ada2fe7eead31-4c383109be9mr5775190137.4.1742090206670; Sat, 15 Mar 2025
+ 18:56:46 -0700 (PDT)
+MIME-Version: 1.0
+From: Stefhanie Rizo <stefhanie.rizo@gmail.com>
+Date: Sat, 15 Mar 2025 19:56:35 -0600
+X-Gm-Features: AQ5f1Jpyo9RW0NzFGyiJLo-9egLOkAg4vODXhOe0WUU5pOwj56hEglzs885nNoM
+Message-ID: <CAPRgPzpGGf2k=CKaNJe+bn-1KG9tAmDSrqJgMqROdfw+0SC80g@mail.gmail.com>
+Subject: Prueba de links in Mail
+To: =?UTF-8?Q?Oscar_Ra=C3=BAl_Pleitez_Trujillo?= <racsoraul@gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000ef7b4906306bfb08"
+
+--000000000000ef7b4906306bfb08
+Content-Type: text/plain; charset="UTF-8"
+
+https://storage.googleapis.com/mail_parse/test.json
+
+-- 
+Saludos cordiales,
+Stefhanie Rizo
+
+--000000000000ef7b4906306bfb08
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><a href=3D"https://storage.googleapis.com/mail_parse/=
+test.json">https://storage.googleapis.com/mail_parse/test.json</a><br clear=
+=3D"all"></div><div><br></div><span class=3D"gmail_signature_prefix">-- </s=
+pan><br><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail_=
+signature"><div dir=3D"ltr">Saludos cordiales,<div>Stefhanie Rizo</div></di=
+v></div></div>
+
+--000000000000ef7b4906306bfb08--
