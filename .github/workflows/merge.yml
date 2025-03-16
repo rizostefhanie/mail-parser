@@ -34,15 +34,6 @@ jobs:
             --repository-format=docker \
             --location=us-east1 || echo "Repository exists"
 
-      # Grant permissions to repository
-      - name: Set repository permissions
-        run: |
-          SERVICE_ACCOUNT=$(echo ${{ secrets.GCP_SA_KEY }} | jq -r '.client_email')
-          gcloud artifacts repositories add-iam-policy-binding mail-sender \
-            --location=us-east1 \
-            --member="serviceAccount:$SERVICE_ACCOUNT" \
-            --role="roles/artifactregistry.writer" || echo "Permissions already set"
-
       # Direct Docker login
       - name: Docker Login
         run: |
