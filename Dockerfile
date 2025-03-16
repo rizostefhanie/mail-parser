@@ -9,9 +9,10 @@ COPY . .
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+RUN npm ci
+
 RUN npm run build
 
-RUN npm ci
 # Expose the port the app runs on
 EXPOSE 3000
 # Command to run the application
