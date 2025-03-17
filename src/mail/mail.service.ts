@@ -24,6 +24,9 @@ export class MailService {
       // Parse the email content
       return await simpleParser(fileContent);
     } catch (error) {
+      this.logger.error({
+        message: `File does not exist: ${filePath}`
+      });
       if (error.code === 'ENOENT') {
         throw new HttpException(`File does not exist: ${filePath}`, 404);
       }
