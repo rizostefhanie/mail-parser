@@ -191,7 +191,7 @@ describe('MailService', () => {
   describe('parseEmailFormUrl', () => {
     it('should download email from URL and parse it', async () => {
       const url = 'https://example.com/email.eml';
-      const filePath = 'src/files/external/download_email.eml';
+      const filePath = pathDownloadEmailExternal+ 'download_email.eml';
 
       mockFileDownloaderService.downloadEmlFromUrl.mockResolvedValue(true);
       jest.spyOn(service, 'parseEmailFromPath').mockResolvedValue([{ data: 'test' }]);
