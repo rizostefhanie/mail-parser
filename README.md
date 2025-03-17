@@ -36,5 +36,5 @@ $ npm run test:cov
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
-- Api Documentation: http://localhost:3000/api
+- Api Documentation: https://mail-sender-microservice-852308476647.us-east1.run.app/api#/
 

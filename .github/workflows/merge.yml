@@ -56,6 +56,7 @@ jobs:
           service: ${{ secrets.SERVICE_NAME }}
           region: us-east1
           image: ${{ secrets.GCP_REPOSITORY }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
+          flags: --allow-unauthenticated
 
       # Output the deployed URL
       - name: Show deployed URL
