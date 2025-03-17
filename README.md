@@ -18,7 +18,7 @@ $ npm run start
 $ npm run start:dev
 
 # production mode
-$ npm run start:prod
+$ npm run start
 ```
 
 ## Run tests
@@ -27,14 +27,8 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 ## Resources
 
-Check out a few resources that may come in handy when working with NestJS:
 - Api Documentation: https://mail-sender-microservice-852308476647.us-east1.run.app/api#/
 
