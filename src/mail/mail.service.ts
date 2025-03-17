@@ -167,6 +167,9 @@ export class MailService {
     }
   }
   validateType(path: string): string {
+    if (!path.includes('.eml')) {
+      throw new HttpException(`'Format url not allowed:`, 412);
+    }
     // Check if a Windows paths like C:\folder\file.txt or \\server\share\file.txt
     const windowsPathPattern =
       /^([a-zA-Z]:\\|\\\\)[^\\/:*?"<>|]+([\\][^\\/:*?"<>|]+)*\\?$/;
@@ -182,13 +185,16 @@ export class MailService {
     const isUnixPath = unixPathPattern.test(path);
     const isRelativePath = relativePathPattern.test(path);
     if (isWindowsPath || isUnixPath || isRelativePath) return 'path';
+
     try {
       new URL(path);
       // If it doesn't throw, it's a valid URL format
       if (path.includes('.eml')) {
         return 'url';
       }
-    } catch (e) {}
-    return '';
+    } catch (e) {
+      throw new Error(e);
+    }
+    throw new HttpException(`'Format url not allowed:`, 412);
   }
 }
