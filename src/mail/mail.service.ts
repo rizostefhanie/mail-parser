@@ -167,9 +167,6 @@ export class MailService {
     }
   }
   validateType(path: string): string {
-    if (!path.includes('.eml')) {
-      throw new HttpException(`'Format url not allowed:`, 412);
-    }
     // Check if a Windows paths like C:\folder\file.txt or \\server\share\file.txt
     const windowsPathPattern =
       /^([a-zA-Z]:\\|\\\\)[^\\/:*?"<>|]+([\\][^\\/:*?"<>|]+)*\\?$/;
@@ -195,6 +192,6 @@ export class MailService {
     } catch (e) {
       throw new Error(e);
     }
-    throw new HttpException(`'Format url not allowed:`, 412);
+   return ''
   }
 }
