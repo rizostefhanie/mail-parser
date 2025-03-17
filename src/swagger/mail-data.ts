@@ -1,4 +1,4 @@
-import { pathDownloadEmailExternal } from 'src/mail/mail.model';
+import { pathDownloadEmailExternal, pathDownloadEmailInternal } from 'src/mail/mail.model';
 
 export const mailExamples ={
   url_with_json_link :{
@@ -11,6 +11,6 @@ export const mailExamples ={
   },
   path_local :{
     summary: 'Get json from internal file',
-    value: pathDownloadEmailExternal+'factura_electronica_peya.eml'
+    value: pathDownloadEmailInternal+'/factura_electronica_peya.eml'
   }
 }
