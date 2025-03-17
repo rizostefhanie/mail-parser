@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import axios  from 'axios';
 
@@ -30,7 +30,7 @@ export class FileDownloaderService {
         size: Buffer.from(response.data).length,
       };
     } catch (error) {
-      throw new Error(`Failed to download EML file: ${error.message}`);
+      throw new HttpException(`Failed to download EML file: ${error.message}`, 500);
     }
   }
   async downloadJson(url: string){
@@ -57,7 +57,7 @@ export class FileDownloaderService {
         size: Buffer.from(response.data).length,
       };
     } catch (error) {
-      throw new Error(`Failed to download Website file: ${error.message}`);
+      throw new HttpException(`Failed to download Website file: ${error.message}`, 500);
     }
   }
 }
