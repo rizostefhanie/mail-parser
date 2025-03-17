@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { ParsedMail, simpleParser } from 'mailparser';
 import {
   defaultFilenameEmail,
@@ -15,38 +15,51 @@ export class MailService {
 
   constructor(private readonly fileDownloaderService: FileDownloaderService) {}
 
-  async getParseEmailFromPath(filePath: string): Promise<ParsedMail>{
-    // Read the file content
-    const fileContent = await fs.readFile(filePath);
-    // Parse the email content
-    return  await simpleParser(fileContent);
+  async getParseEmailFromPath(filePath: string): Promise<ParsedMail> {
+    try {
+      // Check if file exists first
+      await fs.access(filePath);
+      // Read the file content
+      const fileContent = await fs.readFile(filePath);
+      // Parse the email content
+      return await simpleParser(fileContent);
+    } catch (error) {
+      this.logger.error({
+        message: `File does not exist: ${filePath}`
+      });
+      if (error.code === 'ENOENT') {
+        throw new HttpException(`File does not exist: ${filePath}`, 404);
+      }
+      throw new HttpException(error.message, 500);
+    }
   }
 
   //Read Emails and validate attachment and content if contains json file or json url's
   async parseEmailFromPath(filePath: string): Promise<DynamicJsonObject[]> {
-    const json: DynamicJsonObject[]=[]
-    const emailParsed = await this.getParseEmailFromPath(filePath)
+    const json: DynamicJsonObject[] = [];
+    const emailParsed = await this.getParseEmailFromPath(filePath);
     // Extract json from attachments
-    const attachment: DynamicJsonObject[]= this.validateAttachments(emailParsed)
-    if(attachment) json.push(...attachment)
+    const attachment: DynamicJsonObject[] =
+      this.validateAttachments(emailParsed);
+    if (attachment) json.push(...attachment);
     // Search url in body mail and get json from url
-    const content = await this.validateContent(emailParsed)
-    if(content) json.push(...content)
-    await this.deleteAllFiles()
-    return json
+    const content = await this.validateContent(emailParsed);
+    if (content) json.push(...content);
+    await this.deleteAllFiles();
+    return json;
   }
 
-  async deleteAllFiles(){
-   try {
-     for (const file of await fs.readdir(pathDownloadEmailExternal)) {
-       await fs.unlink(path.join(pathDownloadEmailExternal, file));
-     }
-   }catch (e){
-     this.logger.log('There are not files to delete.')
-   }
+  async deleteAllFiles() {
+    try {
+      for (const file of await fs.readdir(pathDownloadEmailExternal)) {
+        await fs.unlink(path.join(pathDownloadEmailExternal, file));
+      }
+    } catch (e) {
+      this.logger.log('There are not files to delete.');
+    }
   }
 
-  validateAttachments(email: ParsedMail): DynamicJsonObject[]{
+  validateAttachments(email: ParsedMail): DynamicJsonObject[] {
     // Process json attachments exist
     if (email.attachments && email.attachments.length > 0) {
       const emailsWithJsonAttachment = email.attachments.filter(
@@ -60,10 +73,10 @@ export class MailService {
         });
       }
     }
-    return []
+    return [];
   }
 
-  async getJsonUrls(urls: string[]):Promise<DynamicJsonObject[]>{
+  async getJsonUrls(urls: string[]): Promise<DynamicJsonObject[]> {
     const promises: Promise<any>[] = [];
     for (let i = 0; i < urls.length; i++) {
       const url = urls[i];
@@ -71,36 +84,43 @@ export class MailService {
     }
     return await Promise.all(promises);
   }
-  async getWebUrls(emailContent: string):Promise<DynamicJsonObject[]>{
+  async getWebUrls(emailContent: string): Promise<DynamicJsonObject[]> {
     const urls = this.extractUrls(emailContent, false);
     const promises: Promise<any>[] = [];
     for (let i = 0; i < urls.length; i++) {
       const url = urls[i];
-      const fileName = `download_website_${i}.html`
+      const fileName = `download_website_${i}.html`;
       const filePath = pathDownloadEmailExternal + fileName;
-      promises.push(this.fileDownloaderService.downloadWebsiteFromUrl(url,filePath,fileName));
+      promises.push(
+        this.fileDownloaderService.downloadWebsiteFromUrl(
+          url,
+          filePath,
+          fileName,
+        ),
+      );
     }
-    const urlsFromWebsite:string[]=[]
-    const allResponse =await Promise.all(promises);
+    const urlsFromWebsite: string[] = [];
+    const allResponse = await Promise.all(promises);
     for (let j = 0; j < allResponse.length; j++) {
-      const filePath = pathDownloadEmailExternal + `download_website_${j}.html`
-      const fileContent: string =(await fs.readFile(filePath)).toString()
-      const urlsResponse: string[] =  this.extractUrls(fileContent)
-      urlsFromWebsite.push(...urlsResponse)
+      const filePath = pathDownloadEmailExternal + `download_website_${j}.html`;
+      const fileContent: string = (await fs.readFile(filePath)).toString();
+      const urlsResponse: string[] = this.extractUrls(fileContent);
+      urlsFromWebsite.push(...urlsResponse);
     }
-    return await this.getJsonUrls(urlsFromWebsite)
+    return await this.getJsonUrls(urlsFromWebsite);
   }
-  async validateContent(email: ParsedMail): Promise<DynamicJsonObject[]>{
-    const resp :DynamicJsonObject[]= []
+  async validateContent(email: ParsedMail): Promise<DynamicJsonObject[]> {
+    const resp: DynamicJsonObject[] = [];
     if (email.text) {
       const jsonUrls = this.extractUrls(email.text);
-      const [jsonFromUrls,jsonFromWeb] = await Promise.all([
-         this.getJsonUrls(jsonUrls),
-         this.getWebUrls(email.text)])
-      resp.push(...jsonFromUrls)
-      resp.push(...jsonFromWeb)
+      const [jsonFromUrls, jsonFromWeb] = await Promise.all([
+        this.getJsonUrls(jsonUrls),
+        this.getWebUrls(email.text),
+      ]);
+      resp.push(...jsonFromUrls);
+      resp.push(...jsonFromWeb);
     }
-    return resp
+    return resp;
   }
 
   extractUrls(text: string, jsonFilter: boolean = true): string[] {
@@ -111,16 +131,16 @@ export class MailService {
     const matches = text.match(urlRegex) || [];
 
     // Filter and clean URLs
-    const resp= [...new Set(matches)].map((url: string) => {
+    const resp = [...new Set(matches)].map((url: string) => {
       if (url.startsWith('www.')) return 'https://' + url;
       return String(url);
-    })
-    if(jsonFilter) return resp.filter(url => url.includes('.json'));
-    return resp.filter(url => !url.includes('.json'));
+    });
+    if (jsonFilter) return resp.filter((url) => url.includes('.json'));
+    return resp.filter((url) => !url.includes('.json'));
   }
 
   async parseEmailFormUrl(decodeUrl: string): Promise<DynamicJsonObject[]> {
-    const filePath = pathDownloadEmailExternal+ defaultFilenameEmail;
+    const filePath = pathDownloadEmailExternal + defaultFilenameEmail;
     // Download the file
     await this.fileDownloaderService.downloadEmlFromUrl(
       decodeUrl,
@@ -142,7 +162,7 @@ export class MailService {
         return [
           {
             message: 'Format url not allowed',
-          }
+          },
         ];
     }
   }
@@ -162,14 +182,16 @@ export class MailService {
     const isUnixPath = unixPathPattern.test(path);
     const isRelativePath = relativePathPattern.test(path);
     if (isWindowsPath || isUnixPath || isRelativePath) return 'path';
+
     try {
       new URL(path);
       // If it doesn't throw, it's a valid URL format
-      if(path.includes('.eml')){
-        return 'url'
+      if (path.includes('.eml')) {
+        return 'url';
       }
     } catch (e) {
+      throw new Error(e);
     }
-    return '';
+   return ''
   }
 }

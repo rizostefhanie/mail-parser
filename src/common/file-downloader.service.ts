@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import axios  from 'axios';
 
 @Injectable()
 export class FileDownloaderService {
-
+  private readonly logger = new Logger(FileDownloaderService.name);
   constructor() {}
 
   async downloadEmlFromUrl(url: string, filePath: string, fileName: string ): Promise<{
@@ -13,6 +13,7 @@ export class FileDownloaderService {
     filePath: string;
     size: number;
   }> {
+
     try {
       const response = await axios.get(url, {
         responseType: 'text',
@@ -30,7 +31,10 @@ export class FileDownloaderService {
         size: Buffer.from(response.data).length,
       };
     } catch (error) {
-      throw new Error(`Failed to download EML file: ${error.message}`);
+      this.logger.error({
+        message: `Failed to download EML file: ${error.message}`
+      });
+      throw new HttpException(`Failed to download EML file: ${error.message}`, 500);
     }
   }
   async downloadJson(url: string){
@@ -57,7 +61,10 @@ export class FileDownloaderService {
         size: Buffer.from(response.data).length,
       };
     } catch (error) {
-      throw new Error(`Failed to download Website file: ${error.message}`);
+      this.logger.error({
+        message: `Failed to download Website file: ${error.message}`
+      });
+      throw new HttpException(`Failed to download Website file: ${error.message}`, 500);
     }
   }
 }
